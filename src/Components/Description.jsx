@@ -1,19 +1,27 @@
 import { useLocation, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 const Description = ({AddToCart}) => {
 
     const location = useLocation();
     const { item: initialItem } = location.state || {};
   
-    const [currentItem, setCurrentItem] = useState(null);
+    // const [currentItem, setCurrentItem] = useState(null);
   
-    useEffect(() => {
-      if (initialItem) {
-        const itemWithQuantity = { ...initialItem, quantity: 1, totalprice: parseFloat(initialItem.price.replace('$', ''))};
-        setCurrentItem(itemWithQuantity);
+
+    // useEffect(() => {
+    //   if (initialItem) {
+    //     const itemWithQuantity = { ...initialItem, quantity: 1, totalprice: parseFloat(initialItem.price.replace('$', ''))};
+    //     setCurrentItem(itemWithQuantity);
         
-      }
-    }, [initialItem]);
+    //   }
+    // }, [initialItem]);
+
+  const [currentItem, setCurrentItem] = useState(() => {
+    if (!initialItem) return null;
+      return {...initialItem,quantity: 1,totalprice: parseFloat(initialItem.price.replace('$', '')),
+      };
+  });
+
   
     if (!currentItem) {
       return <div className="text-center mt-10 text-red-500">No item selected.</div>;
@@ -21,11 +29,9 @@ const Description = ({AddToCart}) => {
 
 
     const handleQuantityChange = (action,item) => {
-
-       {item.quantity === item.avl_quan ?
-          (alert("you ordered the maximum available quantity"))
-          : ""
-        }
+       if(item.quantity === item.avl_quan)
+       { alert("you ordered the maximum available quantity") }
+       
         const currentQuantity = item.quantity || 1; // start from 1 if not set
         
          
@@ -49,7 +55,7 @@ const Description = ({AddToCart}) => {
                     <div className="w-80 h-80 overflow-hidden flex items-center justify-center">
                         <img src={currentItem.image} alt={currentItem.name} className="object-contain h-full w-full" />
                     </div>
-                    <div className = 'flex flex-col ml-5 mt-25'>
+                    <div className = 'flex flex-col ml-5 mt-24'>
                         <h3 className="text-base font-medium text-gray-600 text-center">{currentItem.price}</h3>
                         <h3 className="text-base font-medium text-gray-600 text-center">{currentItem.avl_quan} in stock</h3>
                         <div className="flex items-center justify-between w-32 border bg-gray-100 rounded-lg border-gray-800 p-2 mt-2">
